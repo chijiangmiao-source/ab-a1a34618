@@ -1,0 +1,22 @@
+{
+  "name": "deepspace-attestation-vault",
+  "version": "1.0.0",
+  "private": true,
+  "description": "深空滑翔器离线姿态事件封存链：IndexedDB 原子意图 + 崩溃恢复 + 回执幂等",
+  "type": "module",
+  "scripts": {
+    "build:web": "node scripts/build-web.mjs",
+    "start": "node src/server.mjs",
+    "verify": "npm run build:web && node src/verify/verify.mjs",
+    "test:rules": "node src/verify/rules.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "playwright": "^1.49.1"
+  },
+  "devDependencies": {
+    "fake-indexeddb": "^6.2.5"
+  }
+}

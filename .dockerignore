@@ -1,0 +1,9 @@
+node_modules/
+.npm-cache/
+.pnpm-store/
+.yarn-cache/
+.syslib/
+# 前端构建产物（由 scripts/build-web.mjs 生成，verify/Docker 构建时自动产出）
+public/vendor/
+test-results/
+playwright-report/

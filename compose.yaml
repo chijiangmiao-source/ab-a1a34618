@@ -1,0 +1,36 @@
+# Compose：可配置宿主端口提供复核页与健康响应；verify 为一次运行后退出的核验服务。
+#
+# 常用：
+#   PORT=9090 docker compose up --build web      # 在 9090 提供页面，健康检查 /health
+#   docker compose run --build verify            # 运行全部核验，退出码即结论
+#   docker compose up --build                    # 同时启动 web 与 verify（verify 完成后退出）
+
+services:
+  web:
+    build:
+      context: .
+      target: web
+    image: deepspace-attestation-vault:web
+    environment:
+      HOST: 0.0.0.0
+      PORT: ${PORT:-8080}
+    ports:
+      - "${PORT:-8080}:${PORT:-8080}"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+(process.env.PORT||8080)+'/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 3s
+    restart: unless-stopped
+
+  verify:
+    build:
+      context: .
+      target: verify
+    image: deepspace-attestation-vault:verify
+    environment:
+      HOST: 127.0.0.1
+      PORT: "8123"
+    # 不对外暴露端口；verify 内部自行拉起宿主并冒烟
+    restart: "no"

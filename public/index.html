@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>深空滑翔器 · 离线姿态事件封存复核页</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>深空滑翔器 · 离线封存链复核页</h1>
+    <div class="health">
+      <span id="db-status" class="pill pill-warn">封存库连接中…</span>
+      <span id="chain-tip" class="mono" title="当前封存链链头摘要"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card" aria-labelledby="submit-title">
+      <h2 id="submit-title">提交封存批次</h2>
+      <p class="hint">稳定批次标识 + 至多 24 条严格递增序号事件；同标识同内容重传返回原回执，内容不同则保留证据并报告冲突。</p>
+
+      <label class="field">
+        <span>批次标识（batchId）</span>
+        <input id="batch-id" type="text" maxlength="64" placeholder="如 GLIDER-A:2026-10-05:RUN3" autocomplete="off" />
+      </label>
+
+      <div class="events-head">
+        <span>事件（序号严格递增，至多 24 条）</span>
+        <div class="row-actions">
+          <button type="button" id="add-row" class="btn btn-small">+ 增加事件</button>
+          <button type="button" id="clear-rows" class="btn btn-small btn-ghost">清空</button>
+        </div>
+      </div>
+      <div id="event-rows" class="event-rows"></div>
+
+      <div class="submit-bar">
+        <button type="button" id="submit-btn" class="btn btn-primary">封存本批</button>
+        <span id="submit-summary" class="hint"></span>
+      </div>
+
+      <div id="result-panel" class="result" hidden></div>
+    </section>
+
+    <section class="card" aria-labelledby="chain-title">
+      <h2 id="chain-title">已封存记录</h2>
+      <p class="hint">只有活动清单指向、且摘要 / 前驱 / 序号连续校验通过的段才属于已封存记录。</p>
+      <div id="chain-list" class="chain-list"></div>
+    </section>
+
+    <section class="card span-2" aria-labelledby="audit-title">
+      <h2 id="audit-title">恢复扫描与中断演练</h2>
+      <div class="drill-bar">
+        <label>
+          故障注入点：
+          <select id="crash-point">
+            <option value="">（不注入）</option>
+            <option value="after-intent">准备意图写入后中断</option>
+            <option value="after-segment">段写入后、清单切换前中断</option>
+            <option value="after-manifest">清单切换后中断</option>
+          </select>
+        </label>
+        <button type="button" id="reopen-btn" class="btn">模拟返航：关闭并重开页面</button>
+        <button type="button" id="reset-btn" class="btn btn-ghost">清空本机封存库</button>
+        <span id="fault-state" class="hint"></span>
+      </div>
+      <h3>本次打开的恢复动作 / 首个阻断证据</h3>
+      <div id="audit-list" class="audit-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/app.mjs"></script>
+</body>
+</html>

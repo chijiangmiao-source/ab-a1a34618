@@ -11,5 +11,10 @@ __pycache__/
 .npm-cache/
 .pnpm-store/
 .yarn-cache/
+.syslib/
+# 前端构建产物（由 scripts/build-web.mjs 生成）
+public/vendor/
+test-results/
+playwright-report/
 *.pyc
 *.pyo
